@@ -40,4 +40,4 @@ jobs:
     - name: Release
       run: mix release
       env:
-        - MIX_ENV: 'prod'
+        MIX_ENV: 'prod'
