@@ -48,6 +48,8 @@ jobs:
     - name: Deploy
       run: |
         echo "test from github" > test.txt
+        echo "$SERVER_IP"
+        echo "${SERVER_IP}"
         scp -i .private.key -o UserKnownHostsFile=.known_hosts test.txt "github:$PASSWORD@$SERVER_IP:/"
       env:
         SERVER_IP: ${{secrets.SERVER_IP}}
