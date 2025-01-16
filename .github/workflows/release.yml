@@ -41,14 +41,14 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > .private.key
         sudo chmod 600 .private.key
-        echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        echo "$SSH_KNOWN_HOSTS" > .known_hosts
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
     - name: Deploy
       run: |
         echo "test from github" > test.txt
-        scp -i .private.key test.txt "github@$SERVER_IP:/"
+        scp -i .private.key -o UserKnownHostsFile=.known_hosts test.txt "github@$SERVER_IP:/"
       env:
         SERVER_IP: ${{secrets.SERVER_IP}}
     
