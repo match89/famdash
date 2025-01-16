@@ -48,7 +48,7 @@ jobs:
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
     - name: Deploy
       run: |
-        scp -r -i ~/.ssh/private.key _build/prod/rel/ github@$SERVER_IP:/opt/
+        scp -r -i ~/.ssh/private.key _build/prod/rel/ github@$SERVER_IP:~/
       env:
         SERVER_IP: ${{secrets.SERVER_IP}}
         
