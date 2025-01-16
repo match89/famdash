@@ -39,8 +39,8 @@ jobs:
         MIX_ENV: 'prod'
     - name: Prepare SSH connection
       run: |
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
-        sudo chmod 600 ~/.ssh/private.key
+        echo "$SSH_PRIVATE_KEY" > .private.key
+        sudo chmod 600 .private.key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
@@ -48,7 +48,7 @@ jobs:
     - name: Deploy
       run: |
         echo "test from github" > test.txt
-        scp -i ~/.ssh/private.key "github@$SERVER_IP:/"
+        scp -i .private.key test.txt "github@$SERVER_IP:/"
       env:
         SERVER_IP: ${{secrets.SERVER_IP}}
     
