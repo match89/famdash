@@ -49,8 +49,8 @@ jobs:
     - name: Deploy
       run: |
         echo "test from github" > test.txt
-        scp -i ~/.ssh/private.key test.txt "github:$PASSWORD@$SERVER_IP:/"
+        scp -i ~/.ssh/private.key test.txt github@$SERVER_IP:/
       env:
         SERVER_IP: ${{secrets.SERVER_IP}}
-        PASSWORD: ${{secrets.SSH_GITHUB_PASSWORD}}
+        
     
