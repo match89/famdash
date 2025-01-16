@@ -48,8 +48,7 @@ jobs:
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
     - name: Deploy
       run: |
-        echo "test from github" > test.txt
-        scp -i ~/.ssh/private.key test.txt github@$SERVER_IP:/
+        scp -i ~/.ssh/private.key _build/prod/rel github@$SERVER_IP:/opt
       env:
         SERVER_IP: ${{secrets.SERVER_IP}}
         
