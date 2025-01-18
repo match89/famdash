@@ -44,7 +44,7 @@ jobs:
         sudo chmod 600 ~/.ssh/private.key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         rsync --no-perms -avzrO -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ github@$SERVER_IP:/opt/famdash/
-        ssh -i ~/.ssh/private.key -c "PORT="80" /opt/famdash/bin/famdash start"
+        ssh -i ~/.ssh/private.key "PORT="80" /opt/famdash/bin/famdash start"
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
