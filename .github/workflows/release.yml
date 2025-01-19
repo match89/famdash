@@ -13,9 +13,9 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  setup:
 
-    name: Build and test
+    name: Setup
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -33,10 +33,20 @@ jobs:
         restore-keys: ${{ runner.os }}-mix-
     - name: Install dependencies
       run: mix deps.get
+  build:
+    name: Build
+    runs-on: ubuntu-24.04-arm
+
+    steps:
     - name: Release
       run: mix release
       env:
         MIX_ENV: 'prod'
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-24.04-arm
+
+    steps:
     - name: Deploy to server
       run: |
         mkdir ~/.ssh
@@ -44,11 +54,10 @@ jobs:
         sudo chmod 600 ~/.ssh/private.key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         rsync --no-perms -avzrO -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ github@$SERVER_IP:/opt/famdash/
-        ssh -i ~/.ssh/private.key github@$SERVER_IP "PORT=80 /opt/famdash/bin/famdash start"
+        ssh -i ~/.ssh/private.key github@$SERVER_IP "PORT=80 DATABASE_URL=$DATABASE_URL /opt/famdash/bin/famdash start"
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
         SERVER_IP: ${{secrets.SERVER_IP}}
-        
-        
+        DATABASE_URL: ecto://postgres:${{secrets.DATABASE_PASSWORD}}@localhost/famdash
     
