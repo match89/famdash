@@ -46,10 +46,11 @@ jobs:
         sudo chmod 600 ~/.ssh/private.key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         rsync --no-perms -avzrO -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ github@$SERVER_IP:/opt/famdash/
-        ssh -i ~/.ssh/private.key github@$SERVER_IP "PORT=80 DATABASE_URL=$DATABASE_URL /opt/famdash/bin/famdash start"
+        ssh -i ~/.ssh/private.key github@$SERVER_IP "PORT=80 DATABASE_URL=$DATABASE_URL SECRET_KEY_BASE=$SECRET_KEY_BASE /opt/famdash/bin/famdash start"
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
         SERVER_IP: ${{secrets.SERVER_IP}}
         DATABASE_URL: ecto://postgres:${{secrets.DATABASE_PASSWORD}}@localhost/famdash
+        SECRET_KEY_BASE: ${{secrets.SECRET_KEY_BASE}}
     
