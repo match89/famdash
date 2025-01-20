@@ -51,6 +51,6 @@ jobs:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
         SERVER_IP: ${{secrets.SERVER_IP}}
-        DATABASE_URL: ecto://postgres:${{secrets.DATABASE_PASSWORD}}@localhost/famdash
+        DATABASE_URL: postgres://famdash_app@localhost/famdash_app?password='${{secrets.DATABASE_PASSWORD}}'
         SECRET_KEY_BASE: ${{secrets.SECRET_KEY_BASE}}
     
