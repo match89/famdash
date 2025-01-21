@@ -39,7 +39,7 @@ jobs:
         mix compile
         mix assets.deploy
         mix phx.digest
-        mix release
+        mix release --overwrite
       env:
         MIX_ENV: 'prod'
   
