@@ -49,12 +49,10 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
         sudo chmod 600 ~/.ssh/private.key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-        rsync -avz -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ github@$SERVER_IP:/opt/famdash/
-        ssh -i ~/.ssh/private.key github@$SERVER_IP "PORT=4000 DATABASE_URL=$DATABASE_URL SECRET_KEY_BASE=$SECRET_KEY_BASE PHX_SERVER=true /opt/famdash/bin/famdash start_iex"
+        echo "Release created at $(date +'%Y-%m-%dT%H:%M:%S')" > _build/prod/rel/famdash/deploy_marker
+        rsync -avz -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ devops@$SERVER_IP:/opt/famdash/
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
         SERVER_IP: ${{secrets.SERVER_IP}}
-        DATABASE_URL: postgres://famdash_app@localhost/famdash_app?password='${{secrets.DATABASE_PASSWORD}}'
-        SECRET_KEY_BASE: ${{secrets.SECRET_KEY_BASE}}
     
