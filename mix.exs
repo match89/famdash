@@ -10,6 +10,13 @@ defmodule Famdash.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+
+      releases: [
+        prod: [
+          include_executables_for: [:unix],
+        ],
+      ]
+
     ]
   end
 
