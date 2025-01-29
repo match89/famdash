@@ -12,7 +12,7 @@ defmodule Famdash.MixProject do
       deps: deps(),
 
       releases: [
-        prod: [
+        famdash: [
           include_executables_for: [:unix],
         ],
       ]
