@@ -83,3 +83,17 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+
+app_uri = "http://localhost:4000"
+config :famdash, :auth_strategies,
+  google: [
+    client_id: System.get_env("GOOGLE_CLIENT_ID"),
+    client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
+    redirect_uri: "#{app_uri}/auth/google/callback",
+    strategy: Assent.Strategy.Google,
+    authorize_url: "https://accounts.google.com/o/oauth2/auth",
+    token_url: "https://oauth2.googleapis.com/token",
+    user_url: "https://www.googleapis.com/oauth2/v3/userinfo",
+    scope: "email profile"
+  ]

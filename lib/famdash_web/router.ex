@@ -1,6 +1,8 @@
 defmodule FamdashWeb.Router do
   use FamdashWeb, :router
 
+  import FamdashWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,10 +10,7 @@ defmodule FamdashWeb.Router do
     plug :put_root_layout, html: {FamdashWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-  end
-
-  pipeline :api do
-    plug :accepts, ["json"]
+    plug :fetch_current_user
   end
 
   scope "/", FamdashWeb do
@@ -19,11 +18,6 @@ defmodule FamdashWeb.Router do
 
     get "/", PageController, :home
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", FamdashWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:famdash, :dev_routes) do
@@ -39,6 +33,35 @@ defmodule FamdashWeb.Router do
 
       live_dashboard "/dashboard", metrics: FamdashWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  ## Authentication routes
+
+  scope "/", FamdashWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{FamdashWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+        get "/auth/:provider", AuthController, :request
+        get "/auth/:provider/callback", AuthController, :callback
+    end
+  end
+
+  scope "/", FamdashWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [{FamdashWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/settings", UserSettingsLive, :edit
+    end
+  end
+
+  scope "/", FamdashWeb do
+    pipe_through [:browser]
+
+    live_session :current_user,
+      on_mount: [{FamdashWeb.UserAuth, :mount_current_user}] do
     end
   end
 end
