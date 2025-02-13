@@ -14,13 +14,13 @@ defmodule FamdashWeb.AuthController do
   end
 
 
-  def callback(conn, params) do
-    config = config!(params["provider"])
+  def callback(conn, %{"provider" => provider} = params) do
+    config = config!(provider)
     |> Keyword.put(:session_params, %{ state: params["state"], code: params["code"], scope: params["scope"] })
 
     case config[:strategy].callback(config, params) do
       {:ok, auth_data} ->
-        social_user = SocialUserMapper.map(String.to_atom(params["provider"]), auth_data.user)
+        social_user = SocialUserMapper.map(String.to_atom(provider), auth_data.user)
         user = find_or_create_user(social_user)
         conn
         |> UserAuth.log_in_user(user)
@@ -35,9 +35,8 @@ defmodule FamdashWeb.AuthController do
 
   def logout(conn, _params) do
     conn
-    |> configure_session(drop: true)
+    |> UserAuth.log_out_user()
     |> put_flash(:info, "Logged out successfully.")
-    |> redirect(to: "/")
   end
 
   defp find_or_create_user(%{provider: provider, uid: uid, email: email}) do
@@ -50,7 +49,7 @@ defmodule FamdashWeb.AuthController do
     end
   end
 
-  @spec config!(charlist()) :: map()
+  @spec config!(String.t()) :: map()
   defp config!(provider) do
     strategies = Application.get_env(:famdash, :auth_strategies) ||
       raise "No auth strategies configured"

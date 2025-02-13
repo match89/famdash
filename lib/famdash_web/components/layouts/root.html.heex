@@ -19,23 +19,18 @@
         </li>
         <li>
           <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <a
-            href="#"
+            href={~p"/logout"}
             class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
           >
             Log out
-          </a>
+          </.link>
         </li>
       <% else %>
         <li>
-          <a href="/auth/google">Login with Google</a>
+          <.link
+            href={~p"/auth/google"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >Login with Google</.link>
         </li>
       <% end %>
     </ul>

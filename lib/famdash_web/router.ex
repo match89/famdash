@@ -53,6 +53,7 @@ defmodule FamdashWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{FamdashWeb.UserAuth, :ensure_authenticated}] do
+      get "/logout", AuthController, :logout
       live "/users/settings", UserSettingsLive, :edit
     end
   end
