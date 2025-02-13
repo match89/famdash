@@ -66,12 +66,15 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 
 
-  # config :famdash, auth_strategies: [
-  #   google: [
-  #     client_id: System.get_env("GOOGLE_CLIENT_ID"),
-  #     client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
-  #     redirect_uri: "https://#{host}/auth/google/callback"
-  #   ]
-  # ]
-
+  config :famdash, :auth_strategies,
+    google: [
+      client_id: System.get_env("GOOGLE_CLIENT_ID"),
+      client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
+      redirect_uri: "https://#{host}/auth/google/callback",
+      strategy: Assent.Strategy.Google,
+      authorize_url: "https://accounts.google.com/o/oauth2/auth",
+      token_url: "https://oauth2.googleapis.com/token",
+      user_url: "https://www.googleapis.com/oauth2/v3/userinfo",
+      scope: "email profile"
+    ]
 end
