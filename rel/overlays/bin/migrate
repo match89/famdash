@@ -1,5 +1,0 @@
-#!/bin/bash
-set -eu
-
-cd -P -- "$(dirname -- "$0")"
-exec ./famdash eval Famdash.Release.migrate
