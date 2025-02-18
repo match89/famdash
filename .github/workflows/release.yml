@@ -47,7 +47,7 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
         sudo chmod 600 ~/.ssh/private.key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-        rsync -avhz --delete -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ devops@$SERVER_IP:/opt/famdash/
+        rsync -avhz --delete --inplace -e "ssh -i ~/.ssh/private.key" _build/prod/rel/famdash/ devops@$SERVER_IP:/opt/famdash/
         ssh -i ~/.ssh/private.key devops@$SERVER_IP "sudo systemctl restart famdash"
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
